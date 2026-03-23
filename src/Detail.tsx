@@ -1,18 +1,39 @@
+import { useNavigate } from "react-router-dom";
+
+type Menu = {
+  date : string,
+  category : string,
+  photo : string,
+  text : string,
+  main : string
+};
+
 type Props = {
-    time : string
+    menus : Menu[]
     children : React.ReactNode
-    main : string
 
 }
 
-export function Detail({time, children, main} : Props) {
+export const Detail =({menus, children} : Props) => {
+
+    const navigate = useNavigate()
+
+    const handleHome = () => {
+        navigate("/Home")
+    }
     return(
         <div>
             <p>日付</p>
-            <p>{time}</p>
+            {menus[0]?.date}
+            <p>カテゴリ</p>
+            {menus[0]?.category}
+            <p>献立写真</p>
             {children}
+            <p>献立</p>
+            {menus[0]?.text}
             <p>メイン料理</p>
-            <p>{main}</p>
+            {menus[0]?.main}
+            <button onClick={handleHome}>ホーム</button>
         </div>
     )
 }
