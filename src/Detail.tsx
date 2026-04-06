@@ -1,39 +1,44 @@
-import { useNavigate } from "react-router-dom";
-
-type Menu = {
-  date : string,
-  category : string,
-  photo : string,
-  text : string,
-  main : string
-};
+import {useParams, Link, useNavigate } from "react-router-dom";
+import type { Menu } from "./Menu";
 
 type Props = {
     menus : Menu[]
-    children : React.ReactNode
-
 }
 
-export const Detail =({menus, children} : Props) => {
+export const Detail =({menus} : Props) => {
 
     const navigate = useNavigate()
-
-    const handleHome = () => {
-        navigate("/Home")
+    const handleCategory = (category:string) =>{
+        navigate(`/Category/${category}`)
     }
+
+    const { id } = useParams<{id : string}>();
+    const menu = menus.find((m) => m.id === id)
+
+
+
+    if(!menu) {
+        return(
+            <div>
+                <h2>データが見つかりません。</h2>
+                <Link to= "/">ホーム</Link>
+            </div>
+        )
+    }
+
     return(
         <div>
             <p>日付</p>
-            {menus[0]?.date}
+            <p>{menu.date}</p>
             <p>カテゴリ</p>
-            {menus[0]?.category}
+            <p onClick={() => handleCategory(menu.category)}>{menu.category}</p>
             <p>献立写真</p>
-            {children}
+            {menu.photo && (<img src={menu.photo} className="base" width="170" height="179" alt="" />)}
             <p>献立</p>
-            {menus[0]?.text}
+            <p>{menu.text}</p>
             <p>メイン料理</p>
-            {menus[0]?.main}
-            <button onClick={handleHome}>ホーム</button>
+            <p>{menu.main}</p>
+            <Link to= "/">ホーム</Link>
         </div>
     )
 }
