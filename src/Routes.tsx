@@ -1,40 +1,37 @@
-import {Routes, Route} from "react-router-dom";
-import {Home} from "./Home.tsx"
+import {Routes, Route} from 'react-router-dom';
+import {Home} from './Home.tsx'
 import {Detail} from './Detail.tsx'
-import {NewForm} from './NewForm.tsx'
+import {Form} from './Form.tsx'
 import {List} from './List.tsx'
-import {Category} from "./Category.tsx";
-import type { Menu } from "./Menu.tsx";
+import {Category} from './Category.tsx';
 
 
-{/**propsで渡す二つの引数として、menusがMenu[]のデータを、setMenusはMenu[]のstateを更新する関数であることを定義している。 */}
-type Props = {
-  menus : Menu[]
-  setMenus: React.Dispatch<React.SetStateAction<Menu[]>>;
-}
-
-export const AppRoutes = ({menus, setMenus} : Props) => {
+export const AppRoutes = () => {
     return(
         <Routes>
             {/*ホーム画面*/}
-            <Route path= "/" element = 
+            <Route path= '/' element = 
               {<Home />} />
 
             {/*詳細画面*/}
-            <Route path= "/Detail/:id" element = 
-              {<Detail menus={menus} />} />
+            <Route path= '/Detail/:id' element = 
+              {<Detail />} />
 
             {/*新規登録画面*/}
-            <Route path= "/New" element = {
-              <NewForm setMenus={setMenus} />} />
+            <Route path= '/New' element = {
+              <Form mode = 'create'/>} />
+            
+            {/**編集画面 */}
+            <Route path = '/Edit/:id' element = {
+              <Form mode = 'edit'/>} />
 
             {/*一覧表示 */}
-            <Route path = "/List" element = {
-              <List menus ={menus} />} />
+            <Route path = '/List' element = {
+              <List />} />
             
             {/**カテゴリ分け一覧 */}
-            <Route path = "/Category/:category" element = {
-              <Category menus ={menus} />} />
+            <Route path = '/Category/:category' element = {
+              <Category />} />
          </Routes>
     )
 }

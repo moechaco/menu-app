@@ -1,0 +1,84 @@
+.title{
+    text-align: center;
+    display: block;
+    padding: 10px 50px;
+    margin: 20px auto;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.topContainer{
+    display: flex;
+    margin-top: 10px;
+} 
+
+.month{
+    display: block;
+    margin: 10px 30px 0px 0px;
+}
+
+.calendar{
+    text-align: center;
+    display: block;
+    margin-left: auto;
+    padding: 10px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.calendar:hover{
+    text-decoration:underline;
+    cursor: pointer;    
+}
+
+.mainContainer{
+    display: flex;
+    padding: 5px 5px;
+    margin: 20px auto;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.mainMenu{
+    display: block;
+    margin: auto 10px auto 30px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border: none;
+    outline: none; 
+    background: transparent;
+
+}
+
+.mainMenu:hover{
+    text-decoration:underline;
+    cursor: pointer;
+}
+
+.bottomContainer{
+    display: flex;
+    margin-top: 10px;
+    justify-content: center
+} 
+
+.link{
+    display: block;
+    margin-right: 3px;
+    border: none;
+    outline: none; 
+    background: transparent;
+}
+
+.link:hover{
+    text-decoration:underline;
+    cursor: pointer;    
+}
+
+.homeLink{
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+}

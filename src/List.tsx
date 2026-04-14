@@ -1,14 +1,31 @@
-import { useNavigate, Link } from "react-router-dom"
-import { useState } from "react"
-import type { Menu } from "./Menu"
-import DatePicker from "react-datepicker"
-import "react-datepicker/dist/react-datepicker.css"
+import { useNavigate, Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import type { Menu } from './type/Menu'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
+import { getMenus } from './lib/db'
+import styles from './css/List.module.css'
+import { formatDate, addDay} from './utils/date'
 
-type Props = {
-    menus : Menu[]
-}
+export const List = () => {
 
-export const List = ({menus} : Props) => {
+    const [menus, setMenus] = useState<Menu[]>([])
+    const [loading,setLoading] = useState(true)
+
+    useEffect(() =>{ 
+        const fetchData = async () =>{
+        try{
+            const data = await getMenus()
+            setMenus(data)
+        } catch(e) {
+            console.error(e)
+            alert('エラーが発生しました。')
+        }finally{
+            setLoading(false)
+        }}
+
+        fetchData()
+    },[])
 
     {/**基準日管理 */}
     const [baseDate, setBaseDate] = useState<Date>(new Date())
@@ -57,32 +74,37 @@ export const List = ({menus} : Props) => {
     }
 
     {/**特定した範囲を出力する。 */}
+       if(loading){
+        return <h3 className={styles.loading}>読み込み中・・・</h3>
+    }
+
     return(
         <div>
-            <h2>献立一覧</h2>
-            {/**カレンダー表示*/}
-            <DatePicker selected = {baseDate} onChange={(date : Date | null) => { if(date){setBaseDate(date)}}} customInput={<button>過去献立</button>}/>
-            <h3>{week.length > 0 && `${week[0]}～${week[6]}`}</h3>
-            <ul>
+            <h2 className={styles.title}>献立一覧</h2>
+            <div className={styles.container}>
+                <h3 className={styles.week}>{week.length > 0 && `${formatDate(week[0])}～${formatDate(week[6])}`}</h3>
+                {/**カレンダー表示*/}
+                 <DatePicker selected = {baseDate} onChange={(date : Date | null) => { if(date){setBaseDate(date)}}} customInput={<button className={styles.rightButton}>➤過去献立</button>}/>
+            </div>
                 {menus
                     .filter((menu) => week.includes(menu.date))
                     .sort((a, b) => (new Date(a.date).getTime() - new Date(b.date).getTime()))
                     .map((menu) => (
-                        <li key = {menu.id} onClick= {() => handleDetail(menu.id)}>
-                            <p>日付</p>
-                            <p>{menu.date}</p>
-                            <p>カテゴリ</p>
-                            <p onClick={() => handleCategory(menu.category)}>{menu.category}</p>
-                            <p>メイン料理</p>
-                            <p>{menu.main}</p>
-                        </li>
+                        <div className ={styles.mainContainer} key = {menu.id} >
+                            <div className ={styles.mainItem}>
+                                <p>{formatDate(menu.date)}{addDay(menu.date)}</p>
+                                <button className={styles.category} onClick={() => handleCategory(menu.category)}>({menu.category})</button>
+                            </div>
+                            <button className ={styles.mainMenu} onClick= {() => handleDetail(menu.id)}>{menu.main}</button>
+                        </div>
                 ))}
-            </ul>
-            {/**一週間後を描画する */}
-            <button onClick={handleAfterWeek}>{laterWeek.length > 0 && `${laterWeek[0]}～${laterWeek[6]}`}</button>
-            {/**一週間前を描画する */}
-            <button onClick={handleBeforeWeek}>{prevWeek.length > 0 && `${prevWeek[0]}～${prevWeek[6]}`}</button>
-            <Link to ="/">ホーム</Link>
+            <div className={styles.container}>
+                {/**一週間前を描画する */}
+                <button className={styles.leftButton} onClick={handleBeforeWeek}>{prevWeek.length > 0 && `➤${prevWeek[0]}～${prevWeek[6]}`}</button>
+                {/**一週間後を描画する */}
+                <button className={styles.rightButton} onClick={handleAfterWeek}>{laterWeek.length > 0 && `➤${laterWeek[0]}～${laterWeek[6]}`}</button>
+            </div>
+            <Link className={styles.homeLink} to ='/'>ホーム</Link>
         </div>
     )
 }
@@ -113,8 +135,7 @@ const createWeek = (base: Date) : string[] => {
     for(let i = 0; i < 7; i++){
         const d = new Date(day)
         d.setDate(d.getDate() + i)
-        week.push(`${String(d.getFullYear())}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`)
+        week.push(`${String(d.getFullYear())}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`)  
     };
-
     return week;
 } 

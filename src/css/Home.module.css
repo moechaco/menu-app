@@ -1,0 +1,26 @@
+.title{
+    text-align: center;
+    display: block;
+    padding: 20px 50px;
+    margin: 20px 0px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.photo {
+    display: block;
+    margin: 0 auto;
+    width: 170px; 
+    height: 175px;
+}
+
+.button{
+    text-align: center;
+    display: block;
+    padding: 20px 50px;
+    margin: 20px 0px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}

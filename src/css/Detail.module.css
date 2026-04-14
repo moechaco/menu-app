@@ -1,0 +1,95 @@
+.title{
+    text-align: center;
+    display: block;
+    padding: 20px 50px;
+    margin: 20px 0px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.loading{
+    display: block;
+    text-align: center;
+    margin: 0, auto;
+}
+
+.container{
+    display: flex;
+    align-items: center;
+}
+
+.label{
+    font-size: 1.2rem;
+}
+
+.category{
+    display: block;
+    font-size: 1.2rem;
+    margin-left: 10px;
+}
+
+.category:hover{
+    text-decoration:underline;
+    cursor: pointer;
+}
+
+.photo{
+    width: stretch;
+    height: stretch;
+}
+
+.menu{
+    display: block;
+    height: stretch;
+    width: stretch;
+    margin-top: 5px;
+    margin-bottom: 40px;
+    padding: 10px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+    font-size: 1.2rem;
+}
+
+.mainMenu{
+    display: block;
+    height: 30px;
+    width: stretch;
+    margin-top: -5px;
+    padding: 20px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+    font-size: 1.2rem;
+}
+
+.buttonContainer{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+
+}
+
+.button{
+    text-align: center;
+    display: block;
+    padding: 10px 30px;
+    margin: 0px 0px 20px 20px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+
+.bottomContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.tranLink{
+    display: block;
+    width: fit-content;
+    margin: 20px 10px;
+}

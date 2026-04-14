@@ -4,6 +4,14 @@ export type Menu = {
     date : string,
     category : string,
     photo : string,
-    text : string,
+    text : string[],
+    main : string
+}
+
+export type Input = {
+    date : string,
+    category : string,
+    photo : string,
+    text : string[],
     main : string
 }

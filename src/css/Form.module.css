@@ -1,0 +1,100 @@
+.title{
+    text-align: center;
+    display: block;
+    padding: 10px 50px;
+    margin: 20px auto;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.loading{
+    display: block;
+    text-align: center;
+    margin: 0, auto;
+}
+
+.mainContainer{
+    display: flex;
+}
+
+.label{
+    display: block;
+    padding: 10px 0px;
+    margin: 20px 40px 10px 0px;
+    white-space: nowrap;
+}
+
+.item{
+    text-align: center;
+    display: block;
+    padding: 10px 10px;
+    margin: 20px 0px 10px 10px;
+    width: stretch;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.file{
+    text-align: center;
+    display: block;
+    padding: 10px 10px;
+    margin: 20px 0px 10px 10px;
+    width: stretch;
+}
+
+.photo{
+    display: block;
+    width: stretch;
+    margin-bottom : 10px;
+}
+
+.text{
+    display: block;
+    height: stretch;
+    width: stretch;
+    padding: 10px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.input{
+    background-color: #FAD4c0;
+    border: none;
+    outline: none;
+}
+
+.mainText{
+    display: block;
+    padding: 10px;
+    width: stretch;
+    height: 50px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.button{
+    text-align: center;
+    display: block;
+    width: stretch;
+    padding: 10px 150px;
+    margin: 50px 0px;
+    border-color: black;
+    background-color: #FAD4c0;
+    border: solid 1px #FF8300;
+}
+
+.bottomContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.bottomItem{
+    text-align: center;
+    display: block;
+    margin: 0px 20px;
+}
