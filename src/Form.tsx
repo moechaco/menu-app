@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
 import styles from './css/Form.module.css'
 import { uploadFiles } from './lib/storage';
