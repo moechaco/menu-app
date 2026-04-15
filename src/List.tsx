@@ -27,28 +27,30 @@ export const List = () => {
         fetchData()
     },[])
 
-    {/**基準日管理 */}
+    {/**基準日を管理するstate */}
     const [baseDate, setBaseDate] = useState<Date>(new Date())
 
     {/**リンク作成 */}
     const navigate = useNavigate();
 
+    {/**詳細画面への画面遷移 */}
     const handleDetail = (id :string) => {
         navigate(`/Detail/${id}`)
     };
 
+    {/**カテゴリー一覧への画面遷移 */}
     const handleCategory = (category: string) => {
         navigate(`/Category/${category}`)
     };
 
-    {/**一週間取得 */}
+    {/**基準日から、一週間取得 */}
     const week = createWeek(baseDate);
 
     {/**一週間前の基準日取得 */}
     const prevDate = new Date(baseDate);
     prevDate.setDate(baseDate.getDate() - 7)
 
-    {/**一週間前取得 */}
+    {/***一週間前の基準日から、一週間取得 */}
     const prevWeek = createWeek(prevDate)
 
     {/**一週間前へ遷移 */}
@@ -62,7 +64,7 @@ export const List = () => {
     const laterDate = new Date(baseDate);
     laterDate.setDate(baseDate.getDate() + 7)
 
-    {/**一週間後取得 */}
+    {/**一週間後の基準日から、一週間取得 */}
     const laterWeek = createWeek(laterDate)
  
     {/**一週間後への遷移 */}
@@ -73,11 +75,12 @@ export const List = () => {
 
     }
 
-    {/**特定した範囲を出力する。 */}
+    {/**ローディング中の画面描画 */}
        if(loading){
         return <h3 className={styles.loading}>読み込み中・・・</h3>
     }
 
+    {/**データが取得できた場合の画面描画 */}
     return(
         <div>
             <h2 className={styles.title}>献立一覧</h2>
@@ -109,7 +112,7 @@ export const List = () => {
     )
 }
 
-{/**一週間計算 */}
+{/**基準日を元に、月曜日から日曜日までの一週間を計算する。 */}
 const createWeek = (base: Date) : string[] => {
 
     {/**基準日作成 */}

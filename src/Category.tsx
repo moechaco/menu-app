@@ -12,7 +12,7 @@ export const Category = () => {
 
     {/**表示する年月を管理するstate */}
     const [date, setDate] = useState(new Date())
-    {/**データを表示するためのstate */}
+    {/**データを管理するためのstate */}
     const [menus,setMenus] = useState<Menu[]>([])
     {/**ページネーションを管理するstate */}
     const [currentPage, setCurrentPage] = useState(1)
@@ -73,6 +73,7 @@ export const Category = () => {
             <h2 className={styles.title}>献立一覧（{category}）</h2>
             <div className={styles.topContainer}>
                 <h3 className={styles.month} key = {date.toISOString()}>{date.getFullYear()}年{date.getMonth() + 1}月</h3>
+                {/**カレンダー表示*/}
                 <DatePicker showMonthYearPicker selected ={date} customInput ={<button className={styles.calendar}>➤過去献立</button>} onChange={(date : Date | null) =>
                     {if(date){
                         setDate(date) 
@@ -87,6 +88,7 @@ export const Category = () => {
                             </div>
                     ))}
             
+            {/**ページネーション処理 */}
             <div className={styles.bottomContainer}>
                 <button className={styles.link} onClick={() => handleChanges(clamp(currentPage - 1, 1, Number(Math.ceil(menus.length / perPage))))}>{currentPage != 2 ? currentPage : 1}</button>
                 {totalPages > 1 &&

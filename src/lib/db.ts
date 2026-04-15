@@ -25,23 +25,25 @@ export const getMenus = async () : Promise<Menu[]> => {
 }
 
 {/**データを新規登録する */}
-export const insertMenu = async (input: Input) : Promise<Menu[]> => {
+export const insertMenu = async (input: Input) : Promise<Menu> => {
     const {data, error} = await supabase
         .from('menus')
         .insert([input])
         .select()
+        .single()
 
         if(error) throw error
         return data
 }
 
 {/**データを更新する */}
-export const updateMenu = async (input: Input, id: string) : Promise<Menu[]> => {
+export const updateMenu = async (input: Input, id: string) : Promise<Menu> => {
     const { data, error } = await supabase
         .from('menus')
         .update([input])
         .eq('id', id)
         .select()
+        .single()
 
         if(error) throw error
         return data
@@ -59,7 +61,7 @@ export const deleteMenu = async(id: string) => {
 }
 
 {/**カテゴリーごとにデータを取得 */}
-export const getCategoryMenu = async ( category: string, startDate: string, endDate: string) => {
+export const getCategoryMenu = async ( category: string, startDate: string, endDate: string) : Promise<Menu[]> => {
     const { data, error } = await supabase 
         .from('menus')
         .select('*')

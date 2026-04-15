@@ -4,7 +4,7 @@ import { supabase } from "./supabase"
 {/**画像をアップロードする */}
 export const uploadFiles = async (file: File): Promise<string> => {
 
-    const filePath = `${Date.now()}/${file.name}`
+    const filePath = `${Date.now()}`
 
     const { error } = await supabase.storage
         .from('menus')

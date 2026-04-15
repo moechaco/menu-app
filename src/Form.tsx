@@ -4,6 +4,7 @@ import styles from './css/Form.module.css'
 import { uploadFiles } from './lib/storage';
 import { insertMenu, updateMenu } from './lib/db';
 import { getMenuById } from './lib/db';
+import type { Input } from './type/Menu';
 
 {/**modeはcreateもしくはeditであることを定義する */}
 type Props = {
@@ -18,11 +19,11 @@ export const Form = ({mode} : Props)  => {
     {/**modeがeditの場合、isEditフラグがtrueであることを宣言 */}
     const isEdit = mode === 'edit'
 
-    {/**Form内のstateを管理する。 */}
-    const [input, setInput] = useState({
+    {/**Form内のデータを管理するstate */}
+    const [input, setInput] = useState<Input>({
         date: '',
         category: '和食',
-        photo: '',
+        photo: null,
         text: [''],
         main: ''
 
@@ -30,20 +31,23 @@ export const Form = ({mode} : Props)  => {
 
     {/**データ到着判定フラグ */}
     const [isLoading, setIsLoding] = useState(false)
+
+    {/**必須項目に値が入ってない場合の、画面表示の判定フラグ */}
+    const [isRequiredError, setIsRequiredError] = useState(false)
  
-    {/**献立の行を管理する。 */}
+    {/**献立の行を管理する変数*/}
     const itemRefs = useRef<(HTMLInputElement | null)[]>([])
 
     const navigate = useNavigate()
 
     useEffect(() => {
-        {/**編集モードでない、もしくはidがない場合は処理を飛ばす */}
+        {/**編集モードでない、もしくはidが存在しない場合は処理を飛ばす */}
         if(!isEdit || !id) return
 
         {/**読み込みモードにする */}
         setIsLoding(true)
 
-        {/**idを基に、データを取得する */}
+        {/**編集もーふぉの場合、idを基にデータを取得する */}
             const fetchData = async () => {
                 try{
                     const data = await getMenuById(id)
@@ -69,7 +73,7 @@ export const Form = ({mode} : Props)  => {
                 }
             }
             fetchData()
-    }, [id, isEdit])
+    }, [id, isEdit, navigate])
 
 
 
@@ -80,13 +84,15 @@ export const Form = ({mode} : Props)  => {
         setInput({...input, text: newText})
     }
 
+    {/**特定のキーを押した場合の処理 */}
     const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-        {/**Backspaceキーの場合、作成した行を消す。★あとで、Backspaceキーがフォーカス当たらないのREADMEに書く */}
+        {/**Backspaceキーの場合、作成した行を消す。 */}
         if(e.key === 'Backspace'){
 
-            {/**一行目の場合、削除させない */}
+            {/**一行目の場合、削除不可  */}
             if(index == 0) return
 
+            {/**対象の行に文字が入っていた場合、削除不可 */}
             if(input.text[index] != '')
                 return
 
@@ -125,12 +131,20 @@ export const Form = ({mode} : Props)  => {
         }       
     }
 
-    
     {/**データを新規登録する */}
     const handleRegister = async () => {
+
+        {/**必須項目に値が入ってなかった場合、警告文を出す。 */}
+        if(input.date == '' || input.category == '' || input.main == ''){
+            setIsRequiredError(true)
+            return
+        } else {
+            setIsRequiredError(false)
+        }
+            
         try{
             const data = await insertMenu(input)
-            navigate(`/Detail/${data[0].id}`)
+            navigate(`/Detail/${data.id}`)
         } catch(e) {
             console.error(e)
         }
@@ -138,21 +152,29 @@ export const Form = ({mode} : Props)  => {
 
     {/**データを編集する */}
     const handleUpdate = async () => {
+
+        {/**必須項目に値が入ってなかった場合、警告文を出す。 */}
+        if(input.date == '' || input.category == '' || input.main == ''){
+            setIsRequiredError(true)
+            return
+        } else {
+            setIsRequiredError(false)
+        }
+
         try{
             if(!id) return
             const data = await updateMenu(input, id)
-            navigate(`/Detail/${data[0].id}`)
+            navigate(`/Detail/${data.id}`)
         } catch(e) {
             console.error(e)
         }
     };
 
-
-
-
+    {/**ローディング中の画面描画 */}
     if(isLoading){
         return <h3 className={styles.loading}>読み込み中・・・</h3>
     }
+
         return(
             <div>
                 <h1 className={styles.title}>{isEdit ? '献立編集' : '献立新規登録'}</h1>
@@ -160,6 +182,7 @@ export const Form = ({mode} : Props)  => {
                     <label className={styles.label}>日付登録</label>
                     <input className={styles.item} type = 'date' value = {input.date} onChange={(e) => setInput({...input, date: e.target.value})} />
                 </div>
+                <p className={styles.required}>{isRequiredError ? '※必須項目' : ''}</p>
                 <div className={styles.mainContainer}>
                     <label className={styles.label}>カテゴリ</label>
                     <select className={styles.item} value = {input.category}  onChange={(e) => setInput({...input, category: e.target.value})}>
@@ -168,6 +191,7 @@ export const Form = ({mode} : Props)  => {
                         <option value = '外食'>外食</option>
                     </select>
                 </div>
+                <p className={styles.required}>{isRequiredError ? '※必須項目' : ''}</p>
                 <div className={styles.mainContainer}>
                     <label className={styles.label}>献立写真</label>
                     <input 
@@ -182,7 +206,7 @@ export const Form = ({mode} : Props)  => {
                 <label className={styles.label}>献立</label>
                 <div className={styles.text}>
                     {input.text.map((i, index) => 
-                        <div key ={index}>
+                        <div className={styles.key} key ={index}>
                             ・
                             <input 
                                 className={styles.input}
@@ -193,8 +217,11 @@ export const Form = ({mode} : Props)  => {
                         </div>
                     )}
                 </div>
-                <label className={styles.label}>メイン料理</label>
-                    <input className={styles.mainText} value = {input.main} type = 'text' onChange={(e) => setInput({...input, main: e.target.value})} />
+                <div className={styles.mainContainer}>
+                <label className={styles.label}>メイン料理 （店舗名）</label>
+                <p className={styles.bottomRequired}>{isRequiredError ? '※必須項目' : ''}</p>
+                </div>
+                <input className={styles.mainText} value = {input.main} type = 'text' onChange={(e) => setInput({...input, main: e.target.value})} />
                 <button className={styles.button} onClick={isEdit ? handleUpdate :handleRegister}>{isEdit ? '編集' : '登録'}</button >
                 <div className={styles.bottomContainer}>
                     <Link className={styles.bottomItem} to='/'>ホーム</Link>

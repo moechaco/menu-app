@@ -10,13 +10,13 @@ export const Detail = () => {
     {/**id取得 */}
     const { id } = useParams<{id : string}>();
 
-    {/**Menuオブジェクトをstate管理 */}
+    {/**データを管理するstate */}
     const [detail, setDetail] = useState<Menu | null>(null)
 
-    {/**ローディング状況をstate管理 */}
+    {/**ローディング状況を管理するstate */}
     const [loading,setLoading] = useState(true)
 
-    {/**DBからidと一致するデータを取得 */}
+    {/**idと一致するデータを取得 */}
     useEffect(() =>{
         const fetchData = async () => {
             try{
@@ -48,11 +48,11 @@ export const Detail = () => {
     {/**削除処理 */}
     const handleDelete = async ( id : string ) => {
         
-        {/**削除するか確認 */}
+        {/**削除するかアラートで確認 */}
         if(confirm('本当に削除しますか？')){
             try{
                 if(!id) return
-                deleteMenu(id)
+                await deleteMenu(id)
                 navigate('/List')
             } catch(e) {
                 console.error(e)
@@ -60,8 +60,6 @@ export const Detail = () => {
         } else {
             return
         }
-
-
     }
 
     {/**ローディング中の画面描画 */}
@@ -77,14 +75,14 @@ export const Detail = () => {
             </div>
         )
     }
-    {/**データが取れた場合の画面描画 */}
+    {/**データが取得できた場合の画面描画 */}
     return(
         <div>
             <h2 className={styles.title}>{formatDate(detail.date)}{addDay(detail.date)}</h2>      
-            <img className={styles.photo} src={detail.photo} />
+            { detail.photo && <img className={styles.photo} src={detail.photo} />}
             <div className={styles.container}>
                 <p className={styles.label}>献立</p>
-                <a className={styles.category}onClick={() => handleCategory(detail.category)}>({detail.category})</a>
+                <a className={styles.category}onClick={() => handleCategory(detail.category)}>（{detail.category}）</a>
             </div >
             <div className={styles.menu}>
                 <ul>

@@ -3,7 +3,7 @@ export type Menu = {
     id : string,
     date : string,
     category : string,
-    photo : string,
+    photo : string | null,
     text : string[],
     main : string
 }
@@ -11,7 +11,7 @@ export type Menu = {
 export type Input = {
     date : string,
     category : string,
-    photo : string,
+    photo : string | null,
     text : string[],
     main : string
 }
