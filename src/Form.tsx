@@ -75,8 +75,6 @@ export const Form = ({mode} : Props)  => {
             fetchData()
     }, [id, isEdit, navigate])
 
-
-
     {/**献立の配列を作成する */}
     const handleChange = (index : number, value :string) => {
         const newText = [...input.text]
@@ -223,6 +221,7 @@ export const Form = ({mode} : Props)  => {
                 </div>
                 <input className={styles.mainText} value = {input.main} type = 'text' onChange={(e) => setInput({...input, main: e.target.value})} />
                 <button className={styles.button} onClick={isEdit ? handleUpdate :handleRegister}>{isEdit ? '編集' : '登録'}</button >
+                {isEdit ? <Link className={styles.returnItem} to={`/Detail/${id}`}>戻る</Link> : null}
                 <div className={styles.bottomContainer}>
                     <Link className={styles.bottomItem} to='/'>ホーム</Link>
                     <Link className={styles.bottomItem} to='/List'>献立一覧</Link>

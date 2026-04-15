@@ -14,12 +14,14 @@
     border-color: black;
     background-color: #FAD4c0;
     border: solid 1px #FF8300;
+    font-weight: normal;
 }
 
 .loading{
     display: block;
     text-align: center;
     margin: 0 auto;
+    font-weight: normal;
 }
 
 .container{

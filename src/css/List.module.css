@@ -6,12 +6,14 @@
     border-color: black;
     background-color: #FAD4c0;
     border: solid 1px #FF8300;
+    font-weight: normal;
 }
 
 .loading{
     display: block;
     text-align: center;
     margin: 0, auto;
+    font-weight: normal;
 }
 
 .container{
@@ -22,6 +24,7 @@
 .week{
     display: block;
     margin: 10px 30px 0px 0px;
+    font-weight: normal;
 }
 
 .rightButton{
@@ -86,7 +89,6 @@
     display: block;
     margin: auto 10px auto 30px;
     font-size: 1.2rem;
-    font-weight: bold;
     border: none;
     outline: none; 
     background: transparent;

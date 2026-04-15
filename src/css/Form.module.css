@@ -15,12 +15,14 @@
     border-color: black;
     background-color: #FAD4c0;
     border: solid 1px #FF8300;
+    font-weight: normal;
 }
 
 .loading{
     display: block;
     text-align: center;
     margin: 0 auto;
+    font-weight: normal;
 }
 
 .mainContainer{
@@ -112,10 +114,21 @@
     display: block;
     width: 100%;
     padding: 10px 150px;
-    margin: 50px 0px;
+    margin: 25px 0px;
     border-color: black;
     background-color: #FAD4c0;
     border: solid 1px #FF8300;
+}
+
+.returnItem{
+    display: block;
+    text-align: center;
+    margin: 10px auto;
+}
+
+.returnItem:hover{
+    text-decoration:underline;
+    cursor: pointer;    
 }
 
 .bottomContainer{
