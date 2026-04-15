@@ -3,9 +3,6 @@ import cookingImg from './assets/cooking.png'
 import styles from './css/Home.module.css'
 
 export const Home = () => {
-
-    console.log(import.meta.env.VITE_SUPABASE_URL)
-    
     return (
     <div>
         <h1 className={styles.title}>献立管理アプリ</h1>
