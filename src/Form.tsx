@@ -6,7 +6,7 @@ import { insertMenu, updateMenu } from './lib/db';
 import { getMenuById } from './lib/db';
 import type { Input } from './type/Menu';
 
-{/**modeはcreateもしくはeditであることを定義する */}
+{/**新規登録か編集かを渡ってくるmodeで判定する。*/}
 type Props = {
     mode : 'create' | 'edit'
 }
@@ -220,7 +220,7 @@ export const Form = ({mode} : Props)  => {
                 <p className={styles.bottomRequired}>{isRequiredError ? '※必須項目' : ''}</p>
                 </div>
                 <input className={styles.mainText} value = {input.main} type = 'text' onChange={(e) => setInput({...input, main: e.target.value})} />
-                <button className={styles.button} onClick={isEdit ? handleUpdate :handleRegister}>{isEdit ? '編集' : '登録'}</button >
+                <button className={styles.button} onClick={isEdit ? handleUpdate :handleRegister}>登録</button >
                 {isEdit ? <Link className={styles.returnItem} to={`/Detail/${id}`}>戻る</Link> : null}
                 <div className={styles.bottomContainer}>
                     <Link className={styles.bottomItem} to='/'>ホーム</Link>
