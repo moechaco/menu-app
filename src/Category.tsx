@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import type { Menu } from './type/Menu'
-import { useParams, useNavigate, Link } from 'react-router-dom'
+import { useParams, useNavigate, Link, useLocation } from 'react-router-dom'
 import DatePicker from 'react-datepicker'
 import styles from './css/Category.module.css'
 import { formatDate, addDay } from './utils/date'
@@ -10,12 +10,25 @@ export const Category = () => {
 
     const { category } = useParams<{category : string}>()
 
-    {/**表示する年月を管理するstate */}
-    const [date, setDate] = useState(new Date())
-    {/**データを管理するためのstate */}
     const [menus,setMenus] = useState<Menu[]>([])
-    {/**ページネーションを管理するstate */}
-    const [currentPage, setCurrentPage] = useState(1)
+
+    const location = useLocation();
+    const [date, setDate] = useState(() => {
+        if(location.state?.date){
+            return new Date(location.state.date)
+        } else {
+            return new Date()
+        }
+    })
+
+    const [currentPage, setCurrentPage] = useState(() => {
+        if(location.state?.currentPage){
+            return location.state.currentPage
+        } else
+            return 1
+    })
+
+    const navigate = useNavigate()
 
     if(!category){
         return(
@@ -25,7 +38,7 @@ export const Category = () => {
             </div>
         )
     }
-    
+
     {/**データ取得 */}
     useEffect(() =>{
         let startDate = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-01`
@@ -38,6 +51,7 @@ export const Category = () => {
             } catch(e){
                 console.log(e)
                 alert('エラーが発生しました。')
+                navigate('/')
             }
         }
     
@@ -63,9 +77,13 @@ export const Category = () => {
         }
 
     {/**詳細画面への画面遷移 */}
-    const navigate = useNavigate()
     const handleDetail = (id: string) => {
-            navigate(`/Detail/${id}`)
+            navigate(`/Detail/${id}`, {state: {
+                from : 'category',
+                date: date.toISOString(),
+                category,
+                currentPage
+            }})
     }
 
     return(
@@ -92,10 +110,10 @@ export const Category = () => {
             <div className={styles.bottomContainer}>
                 <button className={styles.link} onClick={() => handleChanges(clamp(currentPage - 1, 1, Number(Math.ceil(menus.length / perPage))))}>{currentPage != 2 ? currentPage : 1}</button>
                 {totalPages > 1 &&
-                (<span className={styles.link} >
-                    {'/'}
-                    <button onClick={() => handleChanges(clamp(currentPage + 1, 1, Number(Math.ceil(menus.length / perPage))))}>{Math.ceil(menus.length / perPage)}</button>
-                </span>)}
+                (<>
+                    <span className={styles.link}>{'/'}</span>
+                    <button className={styles.link} onClick={() => handleChanges(clamp(currentPage + 1, 1, Number(Math.ceil(menus.length / perPage))))}>{Math.ceil(menus.length / perPage)}</button>
+                </>)}
             </div>
                 
             <Link className={styles.homeLink} to = '/'>ホーム</Link>

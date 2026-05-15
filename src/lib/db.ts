@@ -3,14 +3,15 @@ import type { Menu, Input } from '../type/Menu'
 
 
 {/**idに一致するデータを取得 */}
-export const getMenuById = async ( id: string) : Promise<Menu | null> => {
+export const getMenuById = async ( id: string) : Promise<Menu> => {
     const { data, error } = await supabase
         .from('menus')
         .select('*')
         .eq('id', id)
         .single()
 
-        if(error)throw error
+        if(error) throw error
+        if(!data) throw new Error('データが見つかりません。')
         return data
     }
 
@@ -20,7 +21,7 @@ export const getMenus = async () : Promise<Menu[]> => {
         .from('menus')
         .select('*')
 
-        if(error)throw error
+        if(error) throw error
         return data
 }
 

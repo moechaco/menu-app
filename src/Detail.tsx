@@ -1,4 +1,4 @@
-import {useParams, Link, useNavigate } from 'react-router-dom';
+import {useParams, Link, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import type { Menu } from './type/Menu';
 import styles from './css/Detail.module.css'
@@ -7,14 +7,13 @@ import { getMenuById, deleteMenu } from './lib/db';
 
 export const Detail = () => {
 
-    {/**id取得 */}
     const { id } = useParams<{id : string}>();
 
-    {/**データを管理するstate */}
     const [detail, setDetail] = useState<Menu | null>(null)
 
-    {/**ローディング状況を管理するstate */}
     const [loading,setLoading] = useState(true)
+
+    const navigate = useNavigate()
 
     {/**idと一致するデータを取得 */}
     useEffect(() =>{
@@ -25,7 +24,8 @@ export const Detail = () => {
                 setDetail(data)             
             } catch(e) {
                 console.error(e)
-                alert('エラーが発生しました。')
+                alert('データが見つかりませんでした。')
+                navigate('/')
             } finally {
                 setLoading(false)
             }
@@ -34,9 +34,22 @@ export const Detail = () => {
     fetchData()
     }, [id]) 
 
+    {/**戻るボタンから前のページへ遷移*/}
+    const location = useLocation();
+    const handleReturn = () => {
+        if(location.state?.from == 'list'){
+            navigate('/List', {state: {baseDate: location.state.baseDate}})
+        }
+
+        if(location.state?.from == 'category'){
+            navigate(`/Category/${location.state.category}`,{state:{
+                date: location.state.date,
+                currentPage: location.state.currentPage}})
+        }
+    }
+
     {/**カテゴリー一覧へ遷移*/}
-    const navigate = useNavigate()
-    const handleCategory = ( category : string ) =>{
+    const handleCategory = ( category : string ) => {
         navigate(`/Category/${category}`)
     }
 
@@ -47,8 +60,6 @@ export const Detail = () => {
 
     {/**削除処理 */}
     const handleDelete = async ( id : string ) => {
-        
-        {/**削除するかアラートで確認 */}
         if(confirm('本当に削除しますか？')){
             try{
                 if(!id) return
@@ -56,6 +67,8 @@ export const Detail = () => {
                 navigate('/List')
             } catch(e) {
                 console.error(e)
+                alert('エラーが発生しました。')
+                navigate('/')
             }
         } else {
             return
@@ -63,7 +76,7 @@ export const Detail = () => {
     }
 
     {/**ローディング中の画面描画 */}
-    if(loading ){
+    if(loading){
         return <h3 className={styles.loading}>読み込み中・・・</h3>}
 
     {/**データがなかった場合の画面描画 */}
@@ -82,7 +95,7 @@ export const Detail = () => {
             { detail.photo && <img className={styles.photo} src={detail.photo} />}
             <div className={styles.container}>
                 <p className={styles.label}>献立</p>
-                <a className={styles.category}onClick={() => handleCategory(detail.category)}>（{detail.category}）</a>
+                <button className={styles.category} onClick={() => handleCategory(detail.category)}>（{detail.category}）</button>
             </div >
             <div className={styles.menu}>
                 <ul>
@@ -96,8 +109,9 @@ export const Detail = () => {
             <p className={styles.label}>メイン料理</p>
             <p className={styles.mainMenu}>{detail.main}</p>
             <div className={styles.buttonContainer}>
-                <button className={styles.button} onClick={() => handleEdit(detail.id)}>編集</button>
-                <button className={styles.button} onClick={() => handleDelete(detail.id)}>削除</button>
+                <button className={styles.tranButton} onClick={() => handleReturn()}>戻る</button>
+                <button className={styles.tranButton} onClick={() => handleEdit(detail.id)}>編集</button>
+                <button className={styles.tranButton} onClick={() => handleDelete(detail.id)}>削除</button>
             </div>
             <div className={styles.bottomContainer}>
                 <Link className={styles.tranLink} to= '/'>ホーム</Link>

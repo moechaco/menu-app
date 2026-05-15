@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import type { Menu } from './type/Menu'
 import DatePicker from 'react-datepicker'
@@ -10,8 +10,21 @@ import { formatDate, addDay} from './utils/date'
 export const List = () => {
 
     const [menus, setMenus] = useState<Menu[]>([])
-    const [loading,setLoading] = useState(true)
 
+    const [loading,setLoading] = useState(true)
+    
+    const location = useLocation();
+    
+    const [baseDate, setBaseDate] = useState<Date>(() => {
+        if(location.state?.baseDate){
+            return new Date(location.state.baseDate)
+        } else {
+            return new Date()
+        }})
+
+    const navigate = useNavigate();
+
+    {/**データ取得 */}
     useEffect(() =>{ 
         const fetchData = async () =>{
         try{
@@ -19,7 +32,8 @@ export const List = () => {
             setMenus(data)
         } catch(e) {
             console.error(e)
-            alert('エラーが発生しました。')
+            alert('データを取得できませんでした。')
+            navigate('/')
         }finally{
             setLoading(false)
         }}
@@ -27,15 +41,13 @@ export const List = () => {
         fetchData()
     },[])
 
-    {/**基準日を管理するstate */}
-    const [baseDate, setBaseDate] = useState<Date>(new Date())
-
-    {/**リンク作成 */}
-    const navigate = useNavigate();
 
     {/**詳細画面への画面遷移 */}
     const handleDetail = (id :string) => {
-        navigate(`/Detail/${id}`)
+        navigate(`/Detail/${id}`,{state: {
+            from: 'list',
+            baseDate: baseDate.toISOString()
+        }})
     };
 
     {/**カテゴリー一覧への画面遷移 */}
@@ -50,7 +62,7 @@ export const List = () => {
     const prevDate = new Date(baseDate);
     prevDate.setDate(baseDate.getDate() - 7)
 
-    {/***一週間前の基準日から、一週間取得 */}
+    {/**一週間前の基準日から、一週間取得 */}
     const prevWeek = createWeek(prevDate)
 
     {/**一週間前へ遷移 */}
@@ -72,7 +84,6 @@ export const List = () => {
         let afterDate = new Date(baseDate)
         afterDate.setDate(baseDate.getDate() + 7)
         setBaseDate(afterDate)
-
     }
 
     {/**ローディング中の画面描画 */}
@@ -87,7 +98,7 @@ export const List = () => {
             <div className={styles.container}>
                 <h3 className={styles.week}>{week.length > 0 && `${formatDate(week[0])}～${formatDate(week[6])}`}</h3>
                 {/**カレンダー表示*/}
-                 <DatePicker selected = {baseDate} onChange={(date : Date | null) => { if(date){setBaseDate(date)}}} customInput={<button className={styles.rightButton}>➤過去献立</button>}/>
+                 <DatePicker selected = {baseDate} onChange={(date : Date | null) => {if(date){setBaseDate(date)}}} customInput={<button className={styles.rightButton}>➤過去献立</button>}/>
             </div>
                 {menus
                     .filter((menu) => week.includes(menu.date))
@@ -102,12 +113,15 @@ export const List = () => {
                         </div>
                 ))}
             <div className={styles.container}>
-                {/**一週間前を描画する */}
+                {/**一週間前を描画 */}
                 <button className={styles.leftButton} onClick={handleBeforeWeek}>{prevWeek.length > 0 && `➤${prevWeek[0]}～${prevWeek[6]}`}</button>
-                {/**一週間後を描画する */}
+                {/**一週間後を描画 */}
                 <button className={styles.rightButton} onClick={handleAfterWeek}>{laterWeek.length > 0 && `➤${laterWeek[0]}～${laterWeek[6]}`}</button>
             </div>
-            <Link className={styles.homeLink} to ='/'>ホーム</Link>
+            <div className={styles.bottomContainer}>
+                <Link className={styles.tranLink} to = '/New'>新規献立</Link>
+                <Link className={styles.tranLink} to ='/'>ホーム</Link>
+            </div>
         </div>
     )
 }

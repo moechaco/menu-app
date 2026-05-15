@@ -6,20 +6,17 @@ import { insertMenu, updateMenu } from './lib/db';
 import { getMenuById } from './lib/db';
 import type { Input } from './type/Menu';
 
-{/**新規登録か編集かを渡ってくるmodeで判定する。*/}
+{/**新規登録か編集か、渡ってくるmodeで判定する。*/}
 type Props = {
     mode : 'create' | 'edit'
 }
 
 export const Form = ({mode} : Props)  => {
 
-    {/**受け取ったidを取得する */}
     const { id } = useParams<{ id : string }>();
 
-    {/**modeがeditの場合、isEditフラグがtrueであることを宣言 */}
     const isEdit = mode === 'edit'
 
-    {/**Form内のデータを管理するstate */}
     const [input, setInput] = useState<Input>({
         date: '',
         category: '和食',
@@ -29,50 +26,40 @@ export const Form = ({mode} : Props)  => {
 
     });
 
-    {/**データ到着判定フラグ */}
     const [isLoading, setIsLoding] = useState(false)
 
-    {/**必須項目に値が入ってない場合の、画面表示の判定フラグ */}
     const [isRequiredError, setIsRequiredError] = useState(false)
  
-    {/**献立の行を管理する変数*/}
+    {/**入力行追加時にフォーカス制御するためのref配列*/}
     const itemRefs = useRef<(HTMLInputElement | null)[]>([])
 
     const navigate = useNavigate()
 
+    {/**データを取得する。*/}
     useEffect(() => {
-        {/**編集モードでない、もしくはidが存在しない場合は処理を飛ばす */}
         if(!isEdit || !id) return
 
-        {/**読み込みモードにする */}
         setIsLoding(true)
 
-        {/**編集もーふぉの場合、idを基にデータを取得する */}
-            const fetchData = async () => {
-                try{
-                    const data = await getMenuById(id)
-                    {/**データがなかった場合 */}
-                    if(!data){
-                        console.error('データが見つかりません')
-                        alert('エラーが発生しました。')
-                        navigate ('/')
-                        return                            
-                    }
-                {/**データが存在した場合 */}
+        const fetchData = async () => {
+            try{
+                const data = await getMenuById(id)
                 setInput({
                     date: data.date,
                     category: data.category,
                     photo: data.photo,
                     text: data.text,
                     main: data.main
-                })
-                } catch(e) {
-                    console.error(e)
-                } finally {
-                    setIsLoding(false)
-                }
+            })
+            } catch(e) {
+                console.error(e)
+                alert('データが見つかりませんでした。')
+                navigate('/')
+            } finally {
+                setIsLoding(false)
             }
-            fetchData()
+        }
+        fetchData()
     }, [id, isEdit, navigate])
 
     {/**献立の配列を作成する */}
@@ -84,15 +71,10 @@ export const Form = ({mode} : Props)  => {
 
     {/**特定のキーを押した場合の処理 */}
     const handleKeyDown = (index: number, e: React.KeyboardEvent) => {
-        {/**Backspaceキーの場合、作成した行を消す。 */}
+        {/**Backspaceで空行を削除し、前の行にフォーカスを戻す*/}
         if(e.key === 'Backspace'){
-
-            {/**一行目の場合、削除不可  */}
             if(index == 0) return
-
-            {/**対象の行に文字が入っていた場合、削除不可 */}
-            if(input.text[index] != '')
-                return
+            if(input.text[index] != '') return
 
             const deleteText = [...input.text]
             deleteText.splice(index, 1)
@@ -100,11 +82,10 @@ export const Form = ({mode} : Props)  => {
 
             setTimeout(() => {
                 itemRefs.current[index - 1]?.focus()
-            }, 0.2)
-            
+            }, 0.2)  
         }
 
-        {/**Enterキーの場合、新しい行を作る。 */}
+        {/**Enterで次の行を追加し、フォーカスを移動する */}
         if(e.key === 'Enter'){
             e.preventDefault();
 
@@ -112,10 +93,9 @@ export const Form = ({mode} : Props)  => {
             newText.splice(index + 1, 0, '')
             setInput({...input, text: newText})
 
-        setTimeout(() => {
-            itemRefs.current[index + 1]?.focus()
-        }, 0)
-            
+            setTimeout(() => {
+                itemRefs.current[index + 1]?.focus()
+            }, 0)
         }
     }
 
@@ -126,6 +106,7 @@ export const Form = ({mode} : Props)  => {
             setInput({...input, photo :data})
         } catch(e){
             console.error(e)
+            alert('画像のアップロードができませんでした。')
         }       
     }
 
@@ -145,6 +126,8 @@ export const Form = ({mode} : Props)  => {
             navigate(`/Detail/${data.id}`)
         } catch(e) {
             console.error(e)
+            alert('データを登録できませんでした。')
+            navigate('/')
         }
     };
 
@@ -165,6 +148,8 @@ export const Form = ({mode} : Props)  => {
             navigate(`/Detail/${data.id}`)
         } catch(e) {
             console.error(e)
+            alert('データを登録できませんでした。')
+            navigate('/')
         }
     };
 

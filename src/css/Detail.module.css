@@ -36,6 +36,9 @@
 .category{
     display: block;
     font-size: 1.2rem;
+    border: none;
+    outline: none; 
+    background: transparent;
 }
 
 .category:hover{
@@ -75,12 +78,11 @@
 
 .buttonContainer{
     display: flex;
-    justify-content: flex-end;
     margin-top: 20px;
-
+    justify-content: flex-end;
 }
 
-.button{
+.tranButton{
     text-align: center;
     display: block;
     padding: 10px 30px;
@@ -89,7 +91,6 @@
     background-color: #FAD4c0;
     border: solid 1px #FF8300;
 }
-
 
 .bottomContainer{
     display: flex;

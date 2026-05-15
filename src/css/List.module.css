@@ -99,9 +99,15 @@
     cursor: pointer;
 }
 
-.homeLink{
+.bottomContainer{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.tranLink{
     display: block;
     width: fit-content;
-    margin: 20px auto;
+    margin: 20px 10px;
 }
 
